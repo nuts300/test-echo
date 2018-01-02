@@ -15,7 +15,7 @@ func main() {
 	})
 
 	// e.POST("/users", saveUser)
-	e.GET("/users/:id", users.getUser)
+	e.GET("/users/:id", users.GetUser)
 	// e.PUT("/users/:id", updateUser)
 	// e.DELETE("/users/:id", deleteUser)
 
