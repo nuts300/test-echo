@@ -4,6 +4,8 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo"
+
+	"github.com/nuts300/test-echo/controllers/users"
 )
 
 func main() {
@@ -13,7 +15,7 @@ func main() {
 	})
 
 	// e.POST("/users", saveUser)
-	e.GET("/users/:id", getUser)
+	e.GET("/users/:id", users.getUser)
 	// e.PUT("/users/:id", updateUser)
 	// e.DELETE("/users/:id", deleteUser)
 
