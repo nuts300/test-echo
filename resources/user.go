@@ -39,8 +39,9 @@ func (u *userResource) CreateUser(user User) (User, error) {
 	return user, err
 }
 
-func (u *userResource) UpdateUser(userID int, user User) (User, error) {
-	err := u.db.Where("id = ?", userID).Updates(&user).Error
+func (u *userResource) UpdateUser(userID int, changeFields User) (User, error) {
+	user := User{}
+	err := u.db.Model(&user).Where("id = ?", userID).Updates(&changeFields).Error
 	return user, err
 }
 
