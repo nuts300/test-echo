@@ -6,10 +6,11 @@ import (
 	"github.com/labstack/echo"
 
 	"github.com/nuts300/test-echo/controllers"
+	"github.com/nuts300/test-echo/db"
 )
 
 func main() {
-	db := GetDB()
+	db := db.GetDB()
 	defer db.Close()
 
 	e := echo.New()

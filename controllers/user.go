@@ -7,8 +7,11 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo"
 
+	"github.com/nuts300/test-echo/applogger"
 	"github.com/nuts300/test-echo/resources"
 )
+
+var logger = applogger.GetLogger()
 
 type userController struct {
 	resource resources.UserResource
