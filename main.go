@@ -1,8 +1,6 @@
 package main
 
 import (
-	"net/http"
-
 	"github.com/labstack/echo"
 
 	"github.com/nuts300/test-echo/controllers"
@@ -14,9 +12,10 @@ func main() {
 	defer db.Close()
 
 	e := echo.New()
-	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello, World!")
-	})
+
+	helloController := controllers.NewHelloController()
+
+	e.GET("/hello", helloController.Hello)
 
 	userController := controllers.NewUserController(db)
 
