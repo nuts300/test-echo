@@ -4,23 +4,25 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-type User struct {
-	Email    string
-	Password string
-	gorm.Model
-}
+type (
+	User struct {
+		Email    string
+		Password string
+		gorm.Model
+	}
 
-type UserResource interface {
-	ReadUserByID(userID int) (User, error)
-	ReadUsers() ([]User, []error)
-	CreateUser(user User) (User, error)
-	UpdateUser(userID int, user User) (User, error)
-	DeleteUser(userID int) (User, error)
-}
+	UserResource interface {
+		ReadUserByID(userID int) (User, error)
+		ReadUsers() ([]User, []error)
+		CreateUser(user User) (User, error)
+		UpdateUser(userID int, user User) (User, error)
+		DeleteUser(userID int) (User, error)
+	}
 
-type userResource struct {
-	db *gorm.DB
-}
+	userResource struct {
+		db *gorm.DB
+	}
+)
 
 func (u *userResource) ReadUserByID(userID int) (User, error) {
 	user := User{}

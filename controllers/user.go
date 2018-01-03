@@ -13,17 +13,19 @@ import (
 
 var logger = appLogger.GetLogger()
 
-type userController struct {
-	resource resources.UserResource
-}
+type (
+	userController struct {
+		resource resources.UserResource
+	}
 
-type UserController interface {
-	GetUser(c echo.Context) error
-	GetUsers(c echo.Context) error
-	CreateUser(c echo.Context) error
-	UpdateUser(c echo.Context) error
-	DeleteUser(c echo.Context) error
-}
+	UserController interface {
+		GetUser(c echo.Context) error
+		GetUsers(c echo.Context) error
+		CreateUser(c echo.Context) error
+		UpdateUser(c echo.Context) error
+		DeleteUser(c echo.Context) error
+	}
+)
 
 func (u *userController) GetUser(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
