@@ -7,11 +7,11 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo"
 
-	"github.com/nuts300/test-echo/applogger"
+	appLogger "github.com/nuts300/test-echo/app_logger"
 	"github.com/nuts300/test-echo/resources"
 )
 
-var logger = applogger.GetLogger()
+var logger = appLogger.GetLogger()
 
 type userController struct {
 	resource resources.UserResource
@@ -49,7 +49,7 @@ func (u *userController) GetUsers(c echo.Context) error {
 func (u *userController) CreateUser(c echo.Context) error {
 	// user := new(resources.User)
 	user := resources.User{}
-	if err := c.Bind(user); err != nil {
+	if err := c.Bind(&user); err != nil {
 		// TODO
 		return err
 	}
@@ -68,7 +68,7 @@ func (u *userController) UpdateUser(c echo.Context) error {
 		return err
 	}
 	user := resources.User{}
-	if err := c.Bind(user); err != nil {
+	if err := c.Bind(&user); err != nil {
 		// TODO
 		return err
 	}

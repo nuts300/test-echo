@@ -1,4 +1,4 @@
-package applogger
+package appLogger
 
 import (
 	"github.com/Sirupsen/logrus"
