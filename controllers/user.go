@@ -29,10 +29,12 @@ func (u *userController) GetUser(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		// TODO
+		return err
 	}
 	result, err := u.resource.ReadUserByID(id)
 	if err != nil {
 		// TODO
+		return err
 	}
 	return c.JSON(http.StatusOK, result)
 }
