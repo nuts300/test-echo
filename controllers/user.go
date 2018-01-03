@@ -41,6 +41,7 @@ func (u *userController) GetUsers(c echo.Context) error {
 	result, errors := u.resource.ReadUsers()
 	if errors != nil {
 		// TODO
+		return errors[0]
 	}
 	return c.JSON(http.StatusOK, result)
 }
@@ -50,10 +51,12 @@ func (u *userController) CreateUser(c echo.Context) error {
 	user := resources.User{}
 	if err := c.Bind(user); err != nil {
 		// TODO
+		return err
 	}
 	result, err := u.resource.CreateUser(user)
 	if err != nil {
 		// TODO
+		return err
 	}
 	return c.JSON(http.StatusOK, result)
 }
@@ -62,14 +65,17 @@ func (u *userController) UpdateUser(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		// TODO
+		return err
 	}
 	user := resources.User{}
 	if err := c.Bind(user); err != nil {
 		// TODO
+		return err
 	}
 	result, err := u.resource.UpdateUser(id, user)
 	if err != nil {
 		// TODO
+		return err
 	}
 	return c.JSON(http.StatusOK, result)
 }
@@ -78,10 +84,12 @@ func (u *userController) DeleteUser(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		// TODO
+		return err
 	}
 	result, err := u.resource.DeleteUser(id)
 	if err != nil {
 		// TODO
+		return err
 	}
 	return c.JSON(http.StatusOK, result)
 }
