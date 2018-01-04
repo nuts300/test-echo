@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
 
 	helloController "github.com/nuts300/test-echo/controllers/hello_controller"
 	userController "github.com/nuts300/test-echo/controllers/user_controller"
@@ -13,6 +14,9 @@ func main() {
 	defer db.Close()
 
 	e := echo.New()
+
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
 
 	hello := helloController.New()
 
