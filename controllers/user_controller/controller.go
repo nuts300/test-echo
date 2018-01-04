@@ -8,6 +8,7 @@ import (
 	"github.com/labstack/echo"
 
 	appLogger "github.com/nuts300/test-echo/app_logger"
+	userModel "github.com/nuts300/test-echo/models/user_model"
 	userResource "github.com/nuts300/test-echo/resources/user_resource"
 )
 
@@ -52,7 +53,7 @@ func (u *userController) GetUsers(c echo.Context) error {
 
 func (u *userController) CreateUser(c echo.Context) error {
 	// user := new(resources.User)
-	user := userResource.User{}
+	user := userModel.New()
 	if err := c.Bind(&user); err != nil {
 		// TODO
 		return err
@@ -71,7 +72,7 @@ func (u *userController) UpdateUser(c echo.Context) error {
 		// TODO
 		return err
 	}
-	user := userResource.User{}
+	user := userModel.New()
 	if err := c.Bind(&user); err != nil {
 		// TODO
 		return err

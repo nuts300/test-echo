@@ -9,3 +9,7 @@ type User struct {
 	Password string
 	gorm.Model
 }
+
+func New() User {
+	return User{}
+}
