@@ -1,16 +1,10 @@
-package resources
+package userResource
 
 import (
 	"github.com/jinzhu/gorm"
 )
 
 type (
-	User struct {
-		Email    string
-		Password string
-		gorm.Model
-	}
-
 	UserResource interface {
 		ReadUserByID(userID int) (User, error)
 		ReadUsers() ([]User, []error)
@@ -53,6 +47,6 @@ func (u *userResource) DeleteUser(userID int) (User, error) {
 	return user, err
 }
 
-func NewUserResource(db *gorm.DB) UserResource {
+func New(db *gorm.DB) UserResource {
 	return &userResource{db: db}
 }

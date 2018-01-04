@@ -3,7 +3,8 @@ package main
 import (
 	"github.com/labstack/echo"
 
-	"github.com/nuts300/test-echo/controllers"
+	helloController "github.com/nuts300/test-echo/controllers/hello_controller"
+	userController "github.com/nuts300/test-echo/controllers/user_controller"
 	"github.com/nuts300/test-echo/db"
 )
 
@@ -13,17 +14,17 @@ func main() {
 
 	e := echo.New()
 
-	helloController := controllers.NewHelloController()
+	hello := helloController.New()
 
-	e.GET("/hello", helloController.Hello)
+	e.GET("/hello", hello.Hello)
 
-	userController := controllers.NewUserController(db)
+	user := userController.New(db)
 
-	e.POST("/users", userController.CreateUser)
-	e.GET("/users/:id", userController.GetUser)
-	e.GET("/users", userController.GetUsers)
-	e.PUT("/users/:id", userController.UpdateUser)
-	e.DELETE("/users/:id", userController.DeleteUser)
+	e.POST("/users", user.CreateUser)
+	e.GET("/users/:id", user.GetUser)
+	e.GET("/users", user.GetUsers)
+	e.PUT("/users/:id", user.UpdateUser)
+	e.DELETE("/users/:id", user.DeleteUser)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }

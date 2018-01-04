@@ -1,4 +1,4 @@
-package controllers
+package userController
 
 import (
 	"net/http"
@@ -8,14 +8,14 @@ import (
 	"github.com/labstack/echo"
 
 	appLogger "github.com/nuts300/test-echo/app_logger"
-	"github.com/nuts300/test-echo/resources"
+	userResource "github.com/nuts300/test-echo/resources/user_resource"
 )
 
 var logger = appLogger.GetLogger()
 
 type (
 	userController struct {
-		resource resources.UserResource
+		resource userResource.UserResource
 	}
 
 	UserController interface {
@@ -52,7 +52,7 @@ func (u *userController) GetUsers(c echo.Context) error {
 
 func (u *userController) CreateUser(c echo.Context) error {
 	// user := new(resources.User)
-	user := resources.User{}
+	user := userResource.User{}
 	if err := c.Bind(&user); err != nil {
 		// TODO
 		return err
@@ -71,7 +71,7 @@ func (u *userController) UpdateUser(c echo.Context) error {
 		// TODO
 		return err
 	}
-	user := resources.User{}
+	user := userResource.User{}
 	if err := c.Bind(&user); err != nil {
 		// TODO
 		return err
@@ -98,6 +98,6 @@ func (u *userController) DeleteUser(c echo.Context) error {
 	return c.JSON(http.StatusOK, result)
 }
 
-func NewUserController(db *gorm.DB) UserController {
-	return &userController{resource: resources.NewUserResource(db)}
+func New(db *gorm.DB) UserController {
+	return &userController{resource: userResource.New(db)}
 }
