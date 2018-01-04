@@ -9,6 +9,7 @@ import (
 	helloController "github.com/nuts300/test-echo/controllers/hello_controller"
 	userController "github.com/nuts300/test-echo/controllers/user_controller"
 	"github.com/nuts300/test-echo/db"
+	errorHander "github.com/nuts300/test-echo/error_handler"
 )
 
 func main() {
@@ -16,6 +17,7 @@ func main() {
 	defer db.Close()
 
 	e := echo.New()
+	e.HTTPErrorHandler = errorHander.AppErrorHandler
 
 	// e.Use(middleware.Logger())
 	e.Use(middleware.Recover())

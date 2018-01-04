@@ -7,6 +7,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo"
 
+	appError "github.com/nuts300/test-echo/app_error"
 	appLogger "github.com/nuts300/test-echo/app_logger"
 	userModel "github.com/nuts300/test-echo/models/user_model"
 	userResource "github.com/nuts300/test-echo/resources/user_resource"
@@ -32,7 +33,9 @@ func (u *userController) GetUser(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		// TODO
-		return err
+		// echo.NewHTTPError()
+		// return errors.Wrap(err, `Invalide user id ${c.Param("id")}`)
+		return appError.NewAppError(appError.INVALID_USER_ID, err)
 	}
 	result, err := u.resource.ReadUserByID(id)
 	if err != nil {
