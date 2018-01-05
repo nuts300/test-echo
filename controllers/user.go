@@ -21,11 +21,11 @@ type (
 	}
 
 	UserController interface {
-		GetUser(c echo.Context) error
-		GetUsers(c echo.Context) error
-		CreateUser(c echo.Context) error
-		UpdateUser(c echo.Context) error
-		DeleteUser(c echo.Context) error
+		GetUser(echo.Context) error
+		GetUsers(echo.Context) error
+		CreateUser(echo.Context) error
+		UpdateUser(echo.Context) error
+		DeleteUser(echo.Context) error
 	}
 )
 

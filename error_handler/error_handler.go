@@ -10,7 +10,7 @@ import (
 
 var logger = appLogger.GetLogger()
 
-type ErrorResponse struct {
+type errorResponse struct {
 	Message string `json:"message" yaml:"message"`
 	Error   string `json:"error" yaml:"error"`
 }
@@ -25,6 +25,6 @@ func AppErrorHandler(err error, c echo.Context) {
 		message = he.Message.(string)
 	}
 	logger.Error(code, err)
-	res := ErrorResponse{Message: message, Error: inner.Error()}
+	res := errorResponse{Message: message, Error: inner.Error()}
 	c.JSON(code, res)
 }

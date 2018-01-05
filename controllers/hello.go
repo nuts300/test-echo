@@ -10,7 +10,7 @@ type (
 	helloController struct{}
 
 	HelloController interface {
-		Hello(c echo.Context) error
+		Hello(echo.Context) error
 	}
 )
 

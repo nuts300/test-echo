@@ -9,9 +9,9 @@ type (
 	UserResource interface {
 		ReadUserByID(userID int) (models.User, error)
 		ReadUsers() ([]models.User, []error)
-		CreateUser(user models.User) (models.User, error)
-		UpdateUser(userID int, user models.User) (models.User, error)
-		DeleteUser(userID int) (models.User, error)
+		CreateUser(models.User) (models.User, error)
+		UpdateUser(int, models.User) (models.User, error)
+		DeleteUser(int) (models.User, error)
 	}
 
 	userResource struct {
