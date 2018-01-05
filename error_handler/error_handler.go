@@ -5,7 +5,10 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo"
+	"github.com/nuts300/test-echo/app_logger"
 )
+
+var logger = appLogger.GetLogger()
 
 type ErrorResponse struct {
 	Message string `json:"message" yaml:"message"`
@@ -21,7 +24,7 @@ func AppErrorHandler(err error, c echo.Context) {
 		inner = he.Inner
 		message = he.Message.(string)
 	}
-	c.Logger().Error(code, err)
+	logger.Error(code, err)
 	res := ErrorResponse{Message: message, Error: inner.Error()}
 	c.JSON(code, res)
 }
