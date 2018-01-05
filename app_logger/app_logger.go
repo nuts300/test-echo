@@ -23,19 +23,19 @@ var warnLogger = log.New(os.Stdout, "[warn]", 0)
 var debugLogger = log.New(os.Stdout, "[debug]", log.LstdFlags|log.Llongfile)
 
 func (c *customeLogger) Error(args ...interface{}) {
-	errorLogger.Println(args)
+	errorLogger.Println(args...)
 }
 
 func (c *customeLogger) Info(args ...interface{}) {
-	infoLogger.Println(args)
+	infoLogger.Println(args...)
 }
 
 func (c *customeLogger) Warn(args ...interface{}) {
-	warnLogger.Println(args)
+	warnLogger.Println(args...)
 }
 
 func (c *customeLogger) Debug(args ...interface{}) {
-	debugLogger.Println(args)
+	debugLogger.Println(args...)
 }
 
 var logger = customeLogger{}
