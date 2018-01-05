@@ -1,13 +1,9 @@
 package models
 
-import (
-	"github.com/jinzhu/gorm"
-)
-
 type User struct {
 	Email    string `json:"email" yaml:"email"`
 	Password string `json:"password" yaml:"password"`
-	gorm.Model
+	Base
 }
 
 func NewUser() User {
