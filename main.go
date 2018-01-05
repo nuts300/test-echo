@@ -19,13 +19,14 @@ func main() {
 	e.HTTPErrorHandler = errorHander.AppErrorHandler
 
 	// e.Use(middleware.Logger())
+	e.Use(middleware.RequestID())
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"*"},
 		AllowMethods: []string{echo.GET, echo.PUT, echo.POST, echo.DELETE},
 	}))
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
-		Format: `${time_rfc3339_nano} [ip]${remote_ip} [host]${host} [method]${method} [uri]${uri} [status]${status}` + "\n",
+		Format: `${time_rfc3339_nano} [rid]${id} [ip]${remote_ip} [host]${host} [method]${method} [uri]${uri} [status]${status}` + "\n",
 		Output: os.Stdout}))
 
 	helloController := controllers.NewHelloController()

@@ -25,7 +25,8 @@ func AppErrorHandler(err error, c echo.Context) {
 		inner = he.Inner
 		message = he.Message.(string)
 	}
-	logger.Error(fmt.Sprint("[status]", code), message)
+	status := fmt.Sprint("[status]", code)
+	logger.Error(status, message)
 	res := errorResponse{Message: message, Error: inner.Error()}
 	c.JSON(code, res)
 }
