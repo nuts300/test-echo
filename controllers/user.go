@@ -36,72 +36,62 @@ func (u *userController) GetUser(c echo.Context) error {
 	if err != nil {
 		return appError.NewAppError(appError.INVALID_USER_ID, err)
 	}
-	result, err := u.resource.ReadUserByID(id)
-	if err != nil {
-		// TODO
+	if result, err := u.resource.ReadUserByID(id); err != nil {
 		return err
+	} else {
+		return c.JSON(http.StatusOK, result)
 	}
-	return c.JSON(http.StatusOK, result)
 }
 
 func (u *userController) GetUsers(c echo.Context) error {
-	result, errors := u.resource.ReadUsers()
-	if errors != nil {
-		// TODO
-		return errors[0]
+	result, err := u.resource.ReadUsers()
+	if err != nil {
+		return err
 	}
 	return c.JSON(http.StatusOK, result)
 }
 
 func (u *userController) CreateUser(c echo.Context) error {
 	user := models.NewUser()
-	err := validate.Struct(user)
-	if err != nil {
+	if err := c.Bind(&user); err != nil {
 		return appError.NewAppError(appError.INVALID_USER_PAYLOAD, err)
 	}
-	if err := c.Bind(&user); err != nil {
-		// TODO
-		return err
+	if err := validate.Struct(user); err != nil {
+		return appError.NewAppError(appError.INVALID_USER_PAYLOAD, err)
 	}
-	result, err := u.resource.CreateUser(user)
-	if err != nil {
-		// TODO
+	if result, err := u.resource.CreateUser(user); err != nil {
 		return err
+	} else {
+		return c.JSON(http.StatusOK, result)
 	}
-	return c.JSON(http.StatusOK, result)
 }
 
 func (u *userController) UpdateUser(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		// TODO
-		return err
+		return appError.NewAppError(appError.INVALID_USER_ID, err)
 	}
 	user := models.NewUser()
 	if err := c.Bind(&user); err != nil {
-		// TODO
-		return err
+		return appError.NewAppError(appError.INVALID_USER_PAYLOAD, err)
 	}
-	result, err := u.resource.UpdateUser(id, user)
-	if err != nil {
-		// TODO
+	if result, err := u.resource.UpdateUser(id, user); err != nil {
 		return err
+	} else {
+		return c.JSON(http.StatusOK, result)
 	}
-	return c.JSON(http.StatusOK, result)
 }
 
 func (u *userController) DeleteUser(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		// TODO
-		return err
+		return appError.NewAppError(appError.INVALID_USER_ID, err)
 	}
-	result, err := u.resource.DeleteUser(id)
-	if err != nil {
-		// TODO
+	if result, err := u.resource.DeleteUser(id); err != nil {
 		return err
+	} else {
+		return c.JSON(http.StatusOK, result)
 	}
-	return c.JSON(http.StatusOK, result)
 }
 
 func NewUserController(db *gorm.DB) UserController {
