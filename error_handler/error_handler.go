@@ -27,7 +27,7 @@ func AppErrorHandler(err error, c echo.Context) {
 	}
 	statusMessge := fmt.Sprint("[status]", code)
 	ridMessage := fmt.Sprint("[rid]", c.Response().Header().Get(echo.HeaderXRequestID))
-	logger.Error(ridMessage, statusMessge, message)
+	logger.Error(ridMessage, statusMessge, err.Error(), inner.Error())
 	res := errorResponse{Message: message, Error: inner.Error()}
 	c.JSON(code, res)
 }
