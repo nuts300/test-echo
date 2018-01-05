@@ -32,9 +32,6 @@ type (
 func (u *userController) GetUser(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		// TODO
-		// echo.NewHTTPError()
-		// return errors.Wrap(err, `Invalide user id ${c.Param("id")}`)
 		return appError.NewAppError(appError.INVALID_USER_ID, err)
 	}
 	result, err := u.resource.ReadUserByID(id)
