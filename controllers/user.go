@@ -1,4 +1,4 @@
-package userController
+package controllers
 
 import (
 	"net/http"
@@ -7,17 +7,17 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo"
 
-	appError "github.com/nuts300/test-echo/app_error"
-	appLogger "github.com/nuts300/test-echo/app_logger"
-	userModel "github.com/nuts300/test-echo/models/user_model"
-	userResource "github.com/nuts300/test-echo/resources/user_resource"
+	"github.com/nuts300/test-echo/app_error"
+	"github.com/nuts300/test-echo/app_logger"
+	"github.com/nuts300/test-echo/models"
+	"github.com/nuts300/test-echo/resources"
 )
 
 var logger = appLogger.GetLogger()
 
 type (
 	userController struct {
-		resource userResource.UserResource
+		resource resources.UserResource
 	}
 
 	UserController interface {
@@ -56,7 +56,7 @@ func (u *userController) GetUsers(c echo.Context) error {
 
 func (u *userController) CreateUser(c echo.Context) error {
 	// user := new(resources.User)
-	user := userModel.New()
+	user := models.NewUser()
 	if err := c.Bind(&user); err != nil {
 		// TODO
 		return err
@@ -75,7 +75,7 @@ func (u *userController) UpdateUser(c echo.Context) error {
 		// TODO
 		return err
 	}
-	user := userModel.New()
+	user := models.NewUser()
 	if err := c.Bind(&user); err != nil {
 		// TODO
 		return err
@@ -102,6 +102,6 @@ func (u *userController) DeleteUser(c echo.Context) error {
 	return c.JSON(http.StatusOK, result)
 }
 
-func New(db *gorm.DB) UserController {
-	return &userController{resource: userResource.New(db)}
+func NewUserController(db *gorm.DB) UserController {
+	return &userController{resource: resources.NewUserResource(db)}
 }

@@ -1,4 +1,4 @@
-package helloController
+package controllers
 
 import (
 	"net/http"
@@ -18,6 +18,6 @@ func (h *helloController) Hello(c echo.Context) error {
 	return c.String(http.StatusOK, "Hello, this is test-echo")
 }
 
-func New() HelloController {
+func NewHelloController() HelloController {
 	return &helloController{}
 }

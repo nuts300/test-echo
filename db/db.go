@@ -4,7 +4,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 
-	userModel "github.com/nuts300/test-echo/models/user_model"
+	"github.com/nuts300/test-echo/models"
 )
 
 /*
@@ -17,7 +17,7 @@ func GetDB() *gorm.DB {
 		// TODO connection error handling
 		panic(err)
 	}
-	db.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(&userModel.User{})
+	db.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(&models.User{})
 
 	return db
 }

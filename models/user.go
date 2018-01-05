@@ -1,4 +1,4 @@
-package userResource
+package models
 
 import (
 	"github.com/jinzhu/gorm"
@@ -10,6 +10,6 @@ type User struct {
 	gorm.Model
 }
 
-func New() User {
+func NewUser() User {
 	return User{}
 }
