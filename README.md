@@ -14,12 +14,12 @@ dep ensure
 
 ## Start app on development
 
-### Install realize
+### Install gin
 ```
 go get github.com/codegangsta/gin
 ```
 
-### Start app
+### Start app for dev
 ```
-gin --appPort 1323 run main.go
+./start_app_dev.sh
 ```

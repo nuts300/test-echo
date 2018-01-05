@@ -2,16 +2,22 @@
 
 
 [[projects]]
-  name = "github.com/Sirupsen/logrus"
-  packages = ["."]
-  revision = "d682213848ed68c0a260ca37d6dd5ace8423f5ba"
-  version = "v1.0.4"
-
-[[projects]]
   name = "github.com/dgrijalva/jwt-go"
   packages = ["."]
   revision = "dbeaa9332f19a944acb5736b4456cfcc02140e29"
   version = "v3.1.0"
+
+[[projects]]
+  name = "github.com/go-playground/locales"
+  packages = [".","currency"]
+  revision = "e4cbcb5d0652150d40ad0646651076b6bd2be4f6"
+  version = "v0.11.2"
+
+[[projects]]
+  name = "github.com/go-playground/universal-translator"
+  packages = ["."]
+  revision = "b32fa301c9fe55953584134cb6853a13c87ec0a1"
+  version = "v0.16.0"
 
 [[projects]]
   name = "github.com/go-sql-driver/mysql"
@@ -56,12 +62,6 @@
   version = "v0.0.3"
 
 [[projects]]
-  name = "github.com/pkg/errors"
-  packages = ["."]
-  revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
-  version = "v0.8.0"
-
-[[projects]]
   branch = "master"
   name = "github.com/valyala/bytebufferpool"
   packages = ["."]
@@ -76,18 +76,24 @@
 [[projects]]
   branch = "master"
   name = "golang.org/x/crypto"
-  packages = ["acme","acme/autocert","ssh/terminal"]
+  packages = ["acme","acme/autocert"]
   revision = "0fcca4842a8d74bfddc2c96a073bd2a4d2a7a2e8"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
-  packages = ["unix","windows"]
+  packages = ["unix"]
   revision = "83801418e1b59fb1880e363299581ee543af32ca"
+
+[[projects]]
+  name = "gopkg.in/go-playground/validator.v9"
+  packages = ["."]
+  revision = "b1f51f36f1c98cc97f777d6fc9d4b05eaa0cabb5"
+  version = "v9.9.1"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "0d8e99976f7148ebe669d1cfcf2a2f18a1b31faf60cd007a6d336787c3bfb56b"
+  inputs-digest = "465dfde70e6221cf0df921f91a2efafb3aad35e4b4152b667ec57f7357c1c89e"
   solver-name = "gps-cdcl"
   solver-version = 1

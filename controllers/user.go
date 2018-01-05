@@ -6,6 +6,7 @@ import (
 
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo"
+	validator "gopkg.in/go-playground/validator.v9"
 
 	"github.com/nuts300/test-echo/app_error"
 	"github.com/nuts300/test-echo/app_logger"
@@ -14,6 +15,7 @@ import (
 )
 
 var logger = appLogger.GetLogger()
+var validate = validator.New()
 
 type (
 	userController struct {
@@ -52,8 +54,11 @@ func (u *userController) GetUsers(c echo.Context) error {
 }
 
 func (u *userController) CreateUser(c echo.Context) error {
-	// user := new(resources.User)
 	user := models.NewUser()
+	err := validate.Struct(user)
+	if err != nil {
+		return appError.NewAppError(appError.INVALID_USER_PAYLOAD, err)
+	}
 	if err := c.Bind(&user); err != nil {
 		// TODO
 		return err

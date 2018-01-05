@@ -1,8 +1,8 @@
 package models
 
 type User struct {
-	Email    string `json:"email" yaml:"email"`
-	Password string `json:"password" yaml:"password"`
+	Email    string `json:"email" yaml:"email" validate:"required,email"`
+	Password string `json:"password" yaml:"password" validate:"required"`
 	Base
 }
 
