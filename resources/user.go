@@ -1,6 +1,8 @@
 package resources
 
 import (
+	"errors"
+
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo"
 	"github.com/nuts300/test-echo/app_error"
@@ -60,9 +62,9 @@ func (u *userResource) UpdateUser(userID int, changeFields models.User) (models.
 	user := models.NewUser()
 	var httpError *echo.HTTPError
 
-	err := u.db.Model(&user).Where("id = ?", userID).Updates(&changeFields).Error
-	if err != nil {
-		httpError = appError.NewAppError(appError.FAILED_UPDATE_USER, err)
+	result := u.db.Model(&user).Where("id = ?", userID).Updates(&changeFields) // .Error
+	if result.Error != nil {
+		httpError = appError.NewAppError(appError.FAILED_UPDATE_USER, result.Error)
 	}
 
 	if err := u.db.Where("id = ?", userID).First(&user).Error; err != nil {
@@ -79,19 +81,14 @@ func (u *userResource) UpdateUser(userID int, changeFields models.User) (models.
 func (u *userResource) DeleteUser(userID int) (models.User, *echo.HTTPError) {
 	user := models.NewUser()
 	var httpError *echo.HTTPError
-	if err := u.db.Where("id = ?", userID).First(&user).Error; err != nil {
-		switch err {
-		case gorm.ErrRecordNotFound:
-			httpError = appError.NewAppError(appError.NOT_FOUND_USER, err)
-		default:
-			httpError = appError.NewAppError(appError.FAILED_READ_USER, err)
-		}
-		return user, httpError
-	}
 
-	err := u.db.Where("id = ?", userID).Delete(&user).Error
-	if err != nil {
-		httpError = appError.NewAppError(appError.FAILED_DELETE_USER, err)
+	result := u.db.Where("id = ?", userID).Delete(&user)
+
+	if result.Error != nil {
+		httpError = appError.NewAppError(appError.FAILED_DELETE_USER, result.Error)
+	}
+	if result.RowsAffected < 1 {
+		httpError = appError.NewAppError(appError.NOT_FOUND_USER, errors.New("Not found user"))
 	}
 	return user, httpError
 }

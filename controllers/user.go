@@ -87,10 +87,10 @@ func (u *userController) DeleteUser(c echo.Context) error {
 	if err != nil {
 		return appError.NewAppError(appError.INVALID_USER_ID, err)
 	}
-	if result, err := u.resource.DeleteUser(id); err != nil {
+	if _, err := u.resource.DeleteUser(id); err != nil {
 		return err
 	} else {
-		return c.JSON(http.StatusOK, result)
+		return c.NoContent(http.StatusNoContent)
 	}
 }
 
