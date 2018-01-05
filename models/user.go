@@ -5,8 +5,8 @@ import (
 )
 
 type User struct {
-	Email    string
-	Password string
+	Email    string `json:"email" yaml:"email"`
+	Password string `json:"password" yaml:"password"`
 	gorm.Model
 }
 

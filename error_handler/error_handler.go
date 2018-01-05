@@ -7,9 +7,9 @@ import (
 	"github.com/labstack/echo"
 )
 
-type Response struct {
-	Message string
-	Error   string
+type ErrorResponse struct {
+	Message string `json:"message" yaml:"message"`
+	Error   string `json:"error" yaml:"error"`
 }
 
 func AppErrorHandler(err error, c echo.Context) {
@@ -22,6 +22,6 @@ func AppErrorHandler(err error, c echo.Context) {
 		message = he.Message.(string)
 	}
 	c.Logger().Error(code, err)
-	res := Response{Message: message, Error: inner.Error()}
+	res := ErrorResponse{Message: message, Error: inner.Error()}
 	c.JSON(code, res)
 }
