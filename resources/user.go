@@ -25,55 +25,75 @@ func (u *userResource) ReadUserByID(userID int) (models.User, *echo.HTTPError) {
 	user := models.NewUser()
 	err := u.db.Where("id = ?", userID).First(&user).Error
 
-	var e *echo.HTTPError = nil
+	var httpError *echo.HTTPError
 	if err != nil {
 		switch err {
 		case gorm.ErrRecordNotFound:
-			e = appError.NewAppError(appError.NOT_FOUND_USER, err)
+			httpError = appError.NewAppError(appError.NOT_FOUND_USER, err)
 		default:
-			e = appError.NewAppError(appError.FAILED_READ_USER, err)
+			httpError = appError.NewAppError(appError.FAILED_READ_USER, err)
 		}
 	}
-	return user, e
+	return user, httpError
 }
 
 func (u *userResource) ReadUsers() ([]models.User, *echo.HTTPError) {
 	users := []models.User{}
 	errors := u.db.Find(&users).GetErrors()
-	var e *echo.HTTPError = nil
+	var httpError *echo.HTTPError
 	if errors != nil {
-		e = appError.NewAppError(appError.FAILED_READ_USERS, errors[0])
+		httpError = appError.NewAppError(appError.FAILED_READ_USERS, errors[0])
 	}
-	return users, e
+	return users, httpError
 }
 
 func (u *userResource) CreateUser(user models.User) (models.User, *echo.HTTPError) {
 	err := u.db.Create(&user).Error
-	var e *echo.HTTPError = nil
+	var httpError *echo.HTTPError
 	if err != nil {
-		e = appError.NewAppError(appError.FAILED_CREATE_USER, err)
+		httpError = appError.NewAppError(appError.FAILED_CREATE_USER, err)
 	}
-	return user, e
+	return user, httpError
 }
 
 func (u *userResource) UpdateUser(userID int, changeFields models.User) (models.User, *echo.HTTPError) {
 	user := models.NewUser()
+	var httpError *echo.HTTPError
+
 	err := u.db.Model(&user).Where("id = ?", userID).Updates(&changeFields).Error
-	var e *echo.HTTPError = nil
 	if err != nil {
-		e = appError.NewAppError(appError.FAILED_UPDATE_USER, err)
+		httpError = appError.NewAppError(appError.FAILED_UPDATE_USER, err)
 	}
-	return user, e
+
+	if err := u.db.Where("id = ?", userID).First(&user).Error; err != nil {
+		switch err {
+		case gorm.ErrRecordNotFound:
+			httpError = appError.NewAppError(appError.NOT_FOUND_USER, err)
+		default:
+			httpError = appError.NewAppError(appError.FAILED_READ_USER, err)
+		}
+	}
+	return user, httpError
 }
 
 func (u *userResource) DeleteUser(userID int) (models.User, *echo.HTTPError) {
 	user := models.NewUser()
-	err := u.db.Where("id = ?", userID).Delete(&user).Error
-	var e *echo.HTTPError = nil
-	if err != nil {
-		e = appError.NewAppError(appError.FAILED_DELETE_USER, err)
+	var httpError *echo.HTTPError
+	if err := u.db.Where("id = ?", userID).First(&user).Error; err != nil {
+		switch err {
+		case gorm.ErrRecordNotFound:
+			httpError = appError.NewAppError(appError.NOT_FOUND_USER, err)
+		default:
+			httpError = appError.NewAppError(appError.FAILED_READ_USER, err)
+		}
+		return user, httpError
 	}
-	return user, e
+
+	err := u.db.Where("id = ?", userID).Delete(&user).Error
+	if err != nil {
+		httpError = appError.NewAppError(appError.FAILED_DELETE_USER, err)
+	}
+	return user, httpError
 }
 
 func NewUserResource(db *gorm.DB) UserResource {
