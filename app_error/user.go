@@ -4,55 +4,55 @@ import "github.com/labstack/echo"
 import "net/http"
 
 func ErrorInvalidUserID(err error) *AppError {
-	return NewAppError(CodeInvalidUserID, err)
+	return newAppError(codeInvalidUserID, err)
 }
 
 func ErrorInvalidUserPayload(err error) *AppError {
-	return NewAppError(CodeInvalidUserPayload, err)
+	return newAppError(codeInvalidUserPayload, err)
 }
 
 func ErrorFailedReadUser(err error) *AppError {
-	return NewAppError(CodeFailedReadUser, err)
+	return newAppError(codeFailedReadUser, err)
 }
 
 func ErrorFailedReadUsers(err error) *AppError {
-	return NewAppError(CodeFailedReadUsers, err)
+	return newAppError(codeFailedReadUsers, err)
 }
 
 func ErrorFailedCreateUser(err error) *AppError {
-	return NewAppError(CodeFailedCreateUser, err)
+	return newAppError(codeFailedCreateUser, err)
 }
 
 func ErrorFailedUpdateUser(err error) *AppError {
-	return NewAppError(CodeFailedUpdateUser, err)
+	return newAppError(codeFailedUpdateUser, err)
 }
 
 func ErrorFailedDeleteUser(err error) *AppError {
-	return NewAppError(CodeFailedDeleteUser, err)
+	return newAppError(codeFailedDeleteUser, err)
 }
 
 func ErrorNotFoundUser(err error) *AppError {
-	return NewAppError(CodeNotFoundUser, err)
+	return newAppError(codeNotFoundUser, err)
 }
 
-func ConvertToUserHttpError(appError *AppError) *echo.HTTPError {
+func convertToUserHttpError(appError *AppError) *echo.HTTPError {
 	switch appError.ErrorCode {
-	case CodeFailedCreateUser:
-		return NewHttpError(http.StatusInternalServerError, MessageFailedCreateUser, appError)
-	case CodeFailedDeleteUser:
-		return NewHttpError(http.StatusInternalServerError, MessageFailedDeleteUser, appError)
-	case CodeFailedReadUser:
-		return NewHttpError(http.StatusInternalServerError, MessageFailedReadUser, appError)
-	case CodeFailedReadUsers:
-		return NewHttpError(http.StatusInternalServerError, MessageFailedReadUser, appError)
-	case CodeFailedUpdateUser:
-		return NewHttpError(http.StatusInternalServerError, MessageFailedUpdateUser, appError)
-	case CodeInvalidUserID:
-		return NewHttpError(http.StatusBadRequest, MessageInvalidUserID, appError)
-	case CodeInvalidUserPayload:
-		return NewHttpError(http.StatusBadRequest, MessageInvalidUserID, appError)
-	case CodeNotFoundUser:
-		return NewHttpError(http.StatusNotFound, MessageNotFoundUser, appError)
+	case codeFailedCreateUser:
+		return newHttpError(http.StatusInternalServerError, messageFailedCreateUser, appError)
+	case codeFailedDeleteUser:
+		return newHttpError(http.StatusInternalServerError, messageFailedDeleteUser, appError)
+	case codeFailedReadUser:
+		return newHttpError(http.StatusInternalServerError, messageFailedReadUser, appError)
+	case codeFailedReadUsers:
+		return newHttpError(http.StatusInternalServerError, messageFailedReadUser, appError)
+	case codeFailedUpdateUser:
+		return newHttpError(http.StatusInternalServerError, messageFailedUpdateUser, appError)
+	case codeInvalidUserID:
+		return newHttpError(http.StatusBadRequest, messageInvalidUserID, appError)
+	case codeInvalidUserPayload:
+		return newHttpError(http.StatusBadRequest, messageInvalidUserID, appError)
+	case codeNotFoundUser:
+		return newHttpError(http.StatusNotFound, messageNotFoundUser, appError)
 	default:
 		return nil
 	}

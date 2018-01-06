@@ -7,13 +7,13 @@ import (
 )
 
 func ErrorUnAuthorized(err error) *AppError {
-	return NewAppError(CodeUnAuthorized, err)
+	return newAppError(codeUnAuthorized, err)
 }
 
-func ConvertToAuthHttpError(appError *AppError) *echo.HTTPError {
+func convertToAuthHttpError(appError *AppError) *echo.HTTPError {
 	switch appError.ErrorCode {
-	case CodeUnAuthorized:
-		return NewHttpError(http.StatusNotFound, MessageNotFoundUser, appError)
+	case codeUnAuthorized:
+		return newHttpError(http.StatusNotFound, messageNotFoundUser, appError)
 	default:
 		return nil
 	}
