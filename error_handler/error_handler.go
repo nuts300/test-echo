@@ -24,6 +24,9 @@ func AppErrorHandler(err error, c echo.Context) {
 		code = he.Code
 		inner = he.Inner
 		message = he.Message.(string)
+		if inner == nil {
+			inner = errors.New("Internal error")
+		}
 	}
 	statusMessge := fmt.Sprint("[status]", code)
 	ridMessage := fmt.Sprint("[rid]", c.Response().Header().Get(echo.HeaderXRequestID))
