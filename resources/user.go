@@ -1,10 +1,7 @@
 package resources
 
 import (
-	"errors"
-
 	"github.com/jinzhu/gorm"
-	"github.com/labstack/echo"
 	"github.com/nuts300/test-echo/app_error"
 	"github.com/nuts300/test-echo/models"
 	"golang.org/x/crypto/bcrypt"
@@ -12,12 +9,12 @@ import (
 
 type (
 	UserResource interface {
-		ReadUserByID(userID int) (models.User, *echo.HTTPError)
-		ReadUsers() ([]models.User, *echo.HTTPError)
-		CreateUser(models.User) (models.User, *echo.HTTPError)
-		UpdateUser(int, models.User) (models.User, *echo.HTTPError)
-		DeleteUser(int) (models.User, *echo.HTTPError)
-		FindUserByEmailAndPassword(email string, password string) (models.User, *echo.HTTPError)
+		ReadUserByID(userID int) (models.User, *appError.AppError)
+		ReadUsers() ([]models.User, *appError.AppError)
+		CreateUser(models.User) (models.User, *appError.AppError)
+		UpdateUser(int, models.User) (models.User, *appError.AppError)
+		DeleteUser(int) (models.User, *appError.AppError)
+		FindUserByEmailAndPassword(email string, password string) (models.User, *appError.AppError)
 	}
 
 	userResource struct {
@@ -25,95 +22,95 @@ type (
 	}
 )
 
-func (u *userResource) ReadUserByID(userID int) (models.User, *echo.HTTPError) {
+func (u *userResource) ReadUserByID(userID int) (models.User, *appError.AppError) {
 	user := models.NewUser()
 	err := u.db.Where("id = ?", userID).First(&user).Error
 
-	var httpError *echo.HTTPError
+	var aError *appError.AppError
 	if err != nil {
 		switch err {
 		case gorm.ErrRecordNotFound:
-			httpError = appError.NewAppError(appError.NOT_FOUND_USER, err)
+			aError = appError.ErrorNotFoundUser(err)
 		default:
-			httpError = appError.NewAppError(appError.FAILED_READ_USER, err)
+			aError = appError.ErrorFailedReadUser(err)
 		}
 	}
-	return user, httpError
+	return user, aError
 }
 
-func (u *userResource) ReadUsers() ([]models.User, *echo.HTTPError) {
+func (u *userResource) ReadUsers() ([]models.User, *appError.AppError) {
 	users := []models.User{}
 	errors := u.db.Find(&users).GetErrors()
-	var httpError *echo.HTTPError
+	var aError *appError.AppError
 	if errors != nil {
-		httpError = appError.NewAppError(appError.FAILED_READ_USERS, errors[0])
+		aError = appError.ErrorFailedReadUsers(errors[0])
 	}
-	return users, httpError
+	return users, aError
 }
 
-func (u *userResource) CreateUser(user models.User) (models.User, *echo.HTTPError) {
+func (u *userResource) CreateUser(user models.User) (models.User, *appError.AppError) {
 	err := u.db.Create(&user).Error
-	var httpError *echo.HTTPError
+	var aError *appError.AppError
 	if err != nil {
-		httpError = appError.NewAppError(appError.FAILED_CREATE_USER, err)
+		aError = appError.ErrorFailedCreateUser(err)
 	}
-	return user, httpError
+	return user, aError
 }
 
-func (u *userResource) UpdateUser(userID int, changeFields models.User) (models.User, *echo.HTTPError) {
+func (u *userResource) UpdateUser(userID int, changeFields models.User) (models.User, *appError.AppError) {
 	user := models.NewUser()
-	var httpError *echo.HTTPError
+	var aError *appError.AppError
 
-	result := u.db.Model(&user).Where("id = ?", userID).Updates(&changeFields) // .Error
-	if result.Error != nil {
-		httpError = appError.NewAppError(appError.FAILED_UPDATE_USER, result.Error)
+	err := u.db.Model(&user).Where("id = ?", userID).Updates(&changeFields).Error
+	if err != nil {
+		aError = appError.ErrorFailedUpdateUser(err)
 	}
 
 	if err := u.db.Where("id = ?", userID).First(&user).Error; err != nil {
 		switch err {
 		case gorm.ErrRecordNotFound:
-			httpError = appError.NewAppError(appError.NOT_FOUND_USER, err)
+			aError = appError.ErrorNotFoundUser(err)
 		default:
-			httpError = appError.NewAppError(appError.FAILED_READ_USER, err)
+			aError = appError.ErrorFailedReadUser(err)
 		}
 	}
-	return user, httpError
+	return user, aError
 }
 
-func (u *userResource) DeleteUser(userID int) (models.User, *echo.HTTPError) {
+func (u *userResource) DeleteUser(userID int) (models.User, *appError.AppError) {
 	user := models.NewUser()
-	var httpError *echo.HTTPError
+	var aError *appError.AppError
 
 	result := u.db.Where("id = ?", userID).Delete(&user)
 
 	if result.Error != nil {
-		httpError = appError.NewAppError(appError.FAILED_DELETE_USER, result.Error)
+		aError = appError.ErrorFailedDeleteUser(result.Error)
 	}
 	if result.RowsAffected < 1 {
-		httpError = appError.NewAppError(appError.NOT_FOUND_USER, errors.New("Not found user"))
+		aError = appError.ErrorNotFoundUser(result.Error)
 	}
-	return user, httpError
+	return user, aError
 }
 
-func (u *userResource) FindUserByEmailAndPassword(email string, password string) (models.User, *echo.HTTPError) {
+func (u *userResource) FindUserByEmailAndPassword(email string, password string) (models.User, *appError.AppError) {
 	user := models.NewUser()
 	err := u.db.Where("email = ?", email).First(&user).Error
-	var httpError *echo.HTTPError
+	var aError *appError.AppError
 	if err != nil {
 		switch err {
 		case gorm.ErrRecordNotFound:
-			httpError = appError.NewAppError(appError.NOT_FOUND_USER, err)
+			aError = appError.ErrorNotFoundUser(err)
 		default:
-			httpError = appError.NewAppError(appError.FAILED_READ_USER, err)
+			aError = appError.ErrorFailedReadUser(err)
 		}
-		return user, httpError
+		return user, aError
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
-		httpError = appError.NewAppError(appError.UNAUTHORIZED_ERROR, err)
+		aError = appError.ErrorNotFoundUser(err)
 	}
 
-	return user, httpError
+	return user, aError
 }
 
 func NewUserResource(db *gorm.DB) UserResource {

@@ -33,19 +33,20 @@ type (
 func (u *userController) GetUser(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return appError.NewAppError(appError.INVALID_USER_ID, err)
+		return appError.ErrorInvalidUserID(err)
 	}
-	if result, err := u.resource.ReadUserByID(id); err != nil {
-		return err
-	} else {
-		return c.JSON(http.StatusOK, result)
+	result, aError := u.resource.ReadUserByID(id)
+	if aError != nil {
+		return aError
 	}
+
+	return c.JSON(http.StatusOK, result)
 }
 
 func (u *userController) GetUsers(c echo.Context) error {
-	result, err := u.resource.ReadUsers()
-	if err != nil {
-		return err
+	result, aError := u.resource.ReadUsers()
+	if aError != nil {
+		return aError
 	}
 	return c.JSON(http.StatusOK, result)
 }
@@ -53,44 +54,47 @@ func (u *userController) GetUsers(c echo.Context) error {
 func (u *userController) CreateUser(c echo.Context) error {
 	user := models.NewUser()
 	if err := c.Bind(&user); err != nil {
-		return appError.NewAppError(appError.INVALID_USER_PAYLOAD, err)
+		return appError.ErrorInvalidUserPayload(err)
 	}
 	if err := validate.Struct(user); err != nil {
-		return appError.NewAppError(appError.INVALID_USER_PAYLOAD, err)
+		return appError.ErrorInvalidUserID(err)
 	}
-	if result, err := u.resource.CreateUser(user); err != nil {
-		return err
-	} else {
-		return c.JSON(http.StatusOK, result)
+	result, aError := u.resource.CreateUser(user)
+	if aError != nil {
+		return aError
 	}
+
+	return c.JSON(http.StatusOK, result)
 }
 
 func (u *userController) UpdateUser(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return appError.NewAppError(appError.INVALID_USER_ID, err)
+		return appError.ErrorInvalidUserID(err)
 	}
 	user := models.NewUser()
 	if err := c.Bind(&user); err != nil {
-		return appError.NewAppError(appError.INVALID_USER_PAYLOAD, err)
+		return appError.ErrorInvalidUserPayload(err)
 	}
-	if result, err := u.resource.UpdateUser(id, user); err != nil {
-		return err
-	} else {
-		return c.JSON(http.StatusOK, result)
+	result, aError := u.resource.UpdateUser(id, user)
+	if aError != nil {
+		return aError
 	}
+
+	return c.JSON(http.StatusOK, result)
 }
 
 func (u *userController) DeleteUser(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return appError.NewAppError(appError.INVALID_USER_ID, err)
+		return appError.ErrorInvalidUserID(err)
 	}
-	if _, err := u.resource.DeleteUser(id); err != nil {
-		return err
-	} else {
-		return c.NoContent(http.StatusNoContent)
+	_, aError := u.resource.DeleteUser(id)
+	if aError != nil {
+		return aError
 	}
+
+	return c.NoContent(http.StatusNoContent)
 }
 
 func NewUserController(resource resources.UserResource) UserController {
