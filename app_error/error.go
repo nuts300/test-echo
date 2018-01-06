@@ -29,7 +29,7 @@ func newAppError(errorCode string, err error) *AppError {
 }
 
 func NewErrorInternalServer(err error) *AppError {
-	return newAppError(codeInternalServer, err)
+	return newAppError(codeInternalServer.ID, err)
 }
 
 func ConvertToHttpError(appError *AppError) *echo.HTTPError {
@@ -39,5 +39,5 @@ func ConvertToHttpError(appError *AppError) *echo.HTTPError {
 	if httpError := convertToUserHttpError(appError); httpError != nil {
 		return httpError
 	}
-	return newHttpError(http.StatusInternalServerError, messageInternalServer, appError)
+	return newHttpError(http.StatusInternalServerError, codeInternalServer.ID, appError)
 }

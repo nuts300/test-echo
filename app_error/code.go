@@ -1,31 +1,19 @@
 package appError
 
 type errorCode struct {
-	ID string
+	ID      string
+	Message string
 }
 
-const (
-	codeInternalServer     = "INTERNAL_SERVER_ERROR"
-	codeInvalidUserID      = "INVALID_USER_ID"
-	codeInvalidUserPayload = "INVALID_USER_PAYLOAD"
-	codeFailedReadUser     = "FAILD_READ_USER"
-	codeFailedReadUsers    = "FAILED_READ_USERS"
-	codeFailedCreateUser   = "FAILED_CREATE_USER"
-	codeFailedUpdateUser   = "FAILED_UPDATE_USER"
-	codeFailedDeleteUser   = "FAILED_DELETE_USER"
-	codeNotFoundUser       = "NOT_FOUND_USER"
-	codeUnAuthorized       = "UNAUTHORIZED"
-)
-
-const (
-	messageInternalServer     = "Unexpected error."
-	messageInvalidUserID      = "Invalid user id."
-	messageInvalidUserPayload = "Invalid user payload."
-	messageFailedReadUser     = "Failed read user."
-	messageFailedReadUsers    = "Failed read users."
-	messageFailedCreateUser   = "Failed create user."
-	messageFailedUpdateUser   = "Failed update user."
-	messageFailedDeleteUser   = "Failed delete user."
-	messageNotFoundUser       = "Not found user."
-	messageUnAuthorized       = "UnAuthorized."
+var (
+	codeInternalServer     = errorCode{ID: "INTERNAL_SERVER_ERROR", Message: "Unexpected error."}
+	codeInvalidUserID      = errorCode{ID: "INVALID_USER_ID", Message: "Invalid user id."}
+	codeInvalidUserPayload = errorCode{ID: "INVALID_USER_PAYLOAD", Message: "Invalid user payload."}
+	codeFailedReadUser     = errorCode{ID: "FAILD_READ_USER", Message: "Failed read user."}
+	codeFailedReadUsers    = errorCode{ID: "FAILED_READ_USERS", Message: "Failed read users."}
+	codeFailedCreateUser   = errorCode{ID: "FAILED_CREATE_USER", Message: "Failed create user."}
+	codeFailedUpdateUser   = errorCode{ID: "FAILED_UPDATE_USER", Message: "Failed update user."}
+	codeFailedDeleteUser   = errorCode{ID: "FAILED_DELETE_USER", Message: "Failed delete user."}
+	codeNotFoundUser       = errorCode{ID: "NOT_FOUND_USER", Message: "Not found user."}
+	codeUnAuthorized       = errorCode{ID: "UNAUTHORIZED", Message: "UnAuthorized."}
 )
