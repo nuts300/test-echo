@@ -41,7 +41,7 @@ func (a *authController) Login(c echo.Context) error {
 		return appError.NewAppError(appError.UNAUTHORIZED_ERROR, tokenErr)
 	}
 
-	return c.JSON(http.StatusOK, token)
+	return c.JSON(http.StatusOK, map[string]string{"token": token})
 }
 
 func (a *authController) RefreshToken(c echo.Context) error {
