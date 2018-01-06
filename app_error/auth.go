@@ -6,7 +6,7 @@ import (
 	"github.com/labstack/echo"
 )
 
-func ErrorUnAuthorized(err error) *AppError {
+func NewErrorUnAuthorized(err error) *AppError {
 	return newAppError(codeUnAuthorized, err)
 }
 

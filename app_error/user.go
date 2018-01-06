@@ -3,35 +3,35 @@ package appError
 import "github.com/labstack/echo"
 import "net/http"
 
-func ErrorInvalidUserID(err error) *AppError {
+func NewErrorInvalidUserID(err error) *AppError {
 	return newAppError(codeInvalidUserID, err)
 }
 
-func ErrorInvalidUserPayload(err error) *AppError {
+func NewErrorInvalidUserPayload(err error) *AppError {
 	return newAppError(codeInvalidUserPayload, err)
 }
 
-func ErrorFailedReadUser(err error) *AppError {
+func NewErrorFailedReadUser(err error) *AppError {
 	return newAppError(codeFailedReadUser, err)
 }
 
-func ErrorFailedReadUsers(err error) *AppError {
+func NewErrorFailedReadUsers(err error) *AppError {
 	return newAppError(codeFailedReadUsers, err)
 }
 
-func ErrorFailedCreateUser(err error) *AppError {
+func NewErrorFailedCreateUser(err error) *AppError {
 	return newAppError(codeFailedCreateUser, err)
 }
 
-func ErrorFailedUpdateUser(err error) *AppError {
+func NewErrorFailedUpdateUser(err error) *AppError {
 	return newAppError(codeFailedUpdateUser, err)
 }
 
-func ErrorFailedDeleteUser(err error) *AppError {
+func NewErrorFailedDeleteUser(err error) *AppError {
 	return newAppError(codeFailedDeleteUser, err)
 }
 
-func ErrorNotFoundUser(err error) *AppError {
+func NewErrorNotFoundUser(err error) *AppError {
 	return newAppError(codeNotFoundUser, err)
 }
 

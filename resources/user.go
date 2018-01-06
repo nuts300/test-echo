@@ -30,9 +30,9 @@ func (u *userResource) ReadUserByID(userID int) (models.User, *appError.AppError
 	if err != nil {
 		switch err {
 		case gorm.ErrRecordNotFound:
-			aError = appError.ErrorNotFoundUser(err)
+			aError = appError.NewErrorNotFoundUser(err)
 		default:
-			aError = appError.ErrorFailedReadUser(err)
+			aError = appError.NewErrorFailedReadUser(err)
 		}
 	}
 	return user, aError
@@ -43,7 +43,7 @@ func (u *userResource) ReadUsers() ([]models.User, *appError.AppError) {
 	errors := u.db.Find(&users).GetErrors()
 	var aError *appError.AppError
 	if errors != nil {
-		aError = appError.ErrorFailedReadUsers(errors[0])
+		aError = appError.NewErrorFailedReadUsers(errors[0])
 	}
 	return users, aError
 }
@@ -52,7 +52,7 @@ func (u *userResource) CreateUser(user models.User) (models.User, *appError.AppE
 	err := u.db.Create(&user).Error
 	var aError *appError.AppError
 	if err != nil {
-		aError = appError.ErrorFailedCreateUser(err)
+		aError = appError.NewErrorFailedCreateUser(err)
 	}
 	return user, aError
 }
@@ -63,15 +63,15 @@ func (u *userResource) UpdateUser(userID int, changeFields models.User) (models.
 
 	err := u.db.Model(&user).Where("id = ?", userID).Updates(&changeFields).Error
 	if err != nil {
-		aError = appError.ErrorFailedUpdateUser(err)
+		aError = appError.NewErrorFailedUpdateUser(err)
 	}
 
 	if err := u.db.Where("id = ?", userID).First(&user).Error; err != nil {
 		switch err {
 		case gorm.ErrRecordNotFound:
-			aError = appError.ErrorNotFoundUser(err)
+			aError = appError.NewErrorNotFoundUser(err)
 		default:
-			aError = appError.ErrorFailedReadUser(err)
+			aError = appError.NewErrorFailedReadUser(err)
 		}
 	}
 	return user, aError
@@ -84,10 +84,10 @@ func (u *userResource) DeleteUser(userID int) (models.User, *appError.AppError) 
 	result := u.db.Where("id = ?", userID).Delete(&user)
 
 	if result.Error != nil {
-		aError = appError.ErrorFailedDeleteUser(result.Error)
+		aError = appError.NewErrorFailedDeleteUser(result.Error)
 	}
 	if result.RowsAffected < 1 {
-		aError = appError.ErrorNotFoundUser(result.Error)
+		aError = appError.NewErrorNotFoundUser(result.Error)
 	}
 	return user, aError
 }
@@ -99,15 +99,15 @@ func (u *userResource) FindUserByEmailAndPassword(email string, password string)
 	if err != nil {
 		switch err {
 		case gorm.ErrRecordNotFound:
-			aError = appError.ErrorNotFoundUser(err)
+			aError = appError.NewErrorNotFoundUser(err)
 		default:
-			aError = appError.ErrorFailedReadUser(err)
+			aError = appError.NewErrorFailedReadUser(err)
 		}
 		return user, aError
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
-		aError = appError.ErrorNotFoundUser(err)
+		aError = appError.NewErrorNotFoundUser(err)
 	}
 
 	return user, aError

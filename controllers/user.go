@@ -33,7 +33,7 @@ type (
 func (u *userController) GetUser(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return appError.ErrorInvalidUserID(err)
+		return appError.NewErrorInvalidUserID(err)
 	}
 	result, aError := u.resource.ReadUserByID(id)
 	if aError != nil {
@@ -54,10 +54,10 @@ func (u *userController) GetUsers(c echo.Context) error {
 func (u *userController) CreateUser(c echo.Context) error {
 	user := models.NewUser()
 	if err := c.Bind(&user); err != nil {
-		return appError.ErrorInvalidUserPayload(err)
+		return appError.NewErrorInvalidUserPayload(err)
 	}
 	if err := validate.Struct(user); err != nil {
-		return appError.ErrorInvalidUserID(err)
+		return appError.NewErrorInvalidUserID(err)
 	}
 	result, aError := u.resource.CreateUser(user)
 	if aError != nil {
@@ -70,11 +70,11 @@ func (u *userController) CreateUser(c echo.Context) error {
 func (u *userController) UpdateUser(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return appError.ErrorInvalidUserID(err)
+		return appError.NewErrorInvalidUserID(err)
 	}
 	user := models.NewUser()
 	if err := c.Bind(&user); err != nil {
-		return appError.ErrorInvalidUserPayload(err)
+		return appError.NewErrorInvalidUserPayload(err)
 	}
 	result, aError := u.resource.UpdateUser(id, user)
 	if aError != nil {
@@ -87,7 +87,7 @@ func (u *userController) UpdateUser(c echo.Context) error {
 func (u *userController) DeleteUser(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return appError.ErrorInvalidUserID(err)
+		return appError.NewErrorInvalidUserID(err)
 	}
 	_, aError := u.resource.DeleteUser(id)
 	if aError != nil {

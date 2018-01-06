@@ -28,7 +28,7 @@ func newAppError(errorCode string, err error) *AppError {
 	return &AppError{ErrorCode: errorCode, Inner: err}
 }
 
-func ErrorInternalServer(err error) *AppError {
+func NewErrorInternalServer(err error) *AppError {
 	return newAppError(codeInternalServer, err)
 }
 
