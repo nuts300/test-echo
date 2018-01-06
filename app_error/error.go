@@ -39,5 +39,5 @@ func ConvertToHttpError(appError *AppError) *echo.HTTPError {
 	if httpError := convertToUserHttpError(appError); httpError != nil {
 		return httpError
 	}
-	return newHttpError(http.StatusInternalServerError, codeInternalServer.ID, appError)
+	return newHttpError(http.StatusInternalServerError, codeInternalServer.Message, appError)
 }
