@@ -8,8 +8,6 @@ import (
 	"github.com/nuts300/test-echo/models"
 	"github.com/nuts300/test-echo/resources"
 
-	"github.com/jinzhu/gorm"
-
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/nuts300/test-echo/app_error"
 )
@@ -96,6 +94,6 @@ func (a *authController) getTokenFromContext(c echo.Context) *jwt.Token {
 	return c.Get("user").(*jwt.Token)
 }
 
-func NewAuthController(db *gorm.DB) AuthController {
-	return &authController{resource: resources.NewUserResource(db)}
+func NewAuthController(resource resources.UserResource) AuthController {
+	return &authController{resource: resource}
 }

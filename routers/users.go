@@ -4,10 +4,12 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo"
 	"github.com/nuts300/test-echo/controllers"
+	"github.com/nuts300/test-echo/resources"
 )
 
 func RegisterUserRoutes(g *echo.Group, db *gorm.DB) {
-	userController := controllers.NewUserController(db)
+	userResource := resources.NewUserResource(db)
+	userController := controllers.NewUserController(userResource)
 
 	g.POST("", userController.CreateUser)
 	g.GET("/:id", userController.GetUser)

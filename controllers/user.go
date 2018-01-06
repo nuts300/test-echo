@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo"
 	validator "gopkg.in/go-playground/validator.v9"
 
@@ -94,6 +93,6 @@ func (u *userController) DeleteUser(c echo.Context) error {
 	}
 }
 
-func NewUserController(db *gorm.DB) UserController {
-	return &userController{resource: resources.NewUserResource(db)}
+func NewUserController(resource resources.UserResource) UserController {
+	return &userController{resource: resource}
 }

@@ -15,7 +15,8 @@ func Jwt() echo.MiddlewareFunc {
 		Claims:      &models.Claims{},
 		Skipper: func(c echo.Context) bool {
 			if c.Request().URL.Path == "/hello" ||
-				(c.Request().URL.Path == "/users" && c.Request().Method == http.MethodPost) {
+				(c.Request().URL.Path == "/users" && c.Request().Method == http.MethodPost) ||
+				(c.Request().URL.Path == "/auth/login" && c.Request().Method == http.MethodPost) {
 				return true
 			}
 			return false
