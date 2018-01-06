@@ -8,7 +8,7 @@ import (
 type User struct {
 	Email    string `json:"email" yaml:"email" validate:"required,email"`
 	Password string `json:"password" yaml:"password" validate:"required"`
-	Base
+	DbBase
 }
 
 func (user *User) BeforeSave(scope *gorm.Scope) (err error) {

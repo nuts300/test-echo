@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-type Base struct {
+type DbBase struct {
 	ID        int        `json:"id" yaml:"id" gorm:"primary_key"`
 	CreatedAt time.Time  `json:"createAt" yaml:"createAt"`
 	UpdatedAt time.Time  `json:"updateAt" yaml:"updateAt"`
