@@ -36,10 +36,11 @@ func main() {
 		TokenLookup: "header:token",
 		Claims:      &models.Claims{},
 	})
+	e.Use(jwtMiddleware)
 
 	helloController := controllers.NewHelloController()
 
-	e.GET("/hello", helloController.Hello, jwtMiddleware)
+	e.GET("/hello", helloController.Hello)
 
 	userController := controllers.NewUserController(db)
 
@@ -52,6 +53,7 @@ func main() {
 	authController := controllers.NewAuthController(db)
 
 	e.POST("/auth/login", authController.Login)
+	e.GET("/auth/whoAmi", authController.WhoAmI)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }

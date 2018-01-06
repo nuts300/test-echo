@@ -23,6 +23,7 @@ type (
 	AuthController interface {
 		Login(echo.Context) error
 		RefreshToken(echo.Context) error
+		WhoAmI(echo.Context) error
 	}
 )
 
@@ -50,6 +51,16 @@ func (a *authController) Login(c echo.Context) error {
 
 func (a *authController) RefreshToken(c echo.Context) error {
 	return errors.New("Not implement")
+}
+
+func (a *authController) WhoAmI(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	climes := user.Claims.(*models.Claims)
+	return c.JSON(http.StatusOK, models.AuthInfo{
+		ID:    climes.ID,
+		Email: climes.Email,
+		Token: user.Raw,
+	})
 }
 
 func (a *authController) createToken(user *models.User) (string, error) {
