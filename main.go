@@ -9,6 +9,7 @@ import (
 	"github.com/nuts300/test-echo/controllers"
 	"github.com/nuts300/test-echo/db"
 	errorHander "github.com/nuts300/test-echo/error_handler"
+	"github.com/nuts300/test-echo/models"
 )
 
 func main() {
@@ -27,11 +28,18 @@ func main() {
 	}))
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: `${time_rfc3339_nano} [rid]${id} [ip]${remote_ip} [host]${host} [method]${method} [uri]${uri} [status]${status}` + "\n",
-		Output: os.Stdout}))
+		Output: os.Stdout,
+	}))
+
+	jwtMiddleware := middleware.JWTWithConfig(middleware.JWTConfig{
+		SigningKey:  []byte("my_secret"),
+		TokenLookup: "header:token",
+		Claims:      &models.Claims{},
+	})
 
 	helloController := controllers.NewHelloController()
 
-	e.GET("/hello", helloController.Hello)
+	e.GET("/hello", helloController.Hello, jwtMiddleware)
 
 	userController := controllers.NewUserController(db)
 
