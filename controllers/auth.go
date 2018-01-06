@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"errors"
 	"net/http"
 	"time"
 
@@ -50,16 +49,31 @@ func (a *authController) Login(c echo.Context) error {
 }
 
 func (a *authController) RefreshToken(c echo.Context) error {
-	return errors.New("Not implement")
+	token := a.getTokenFromContext(c)
+	climes := a.decodeToken(token)
+	user := models.User{
+		ID:    climes.ID,
+		Email: climes.Email,
+	}
+	newToken, tokenErr := a.createToken(&user)
+	if tokenErr != nil || newToken == "" {
+		return appError.NewAppError(appError.UNAUTHORIZED_ERROR, tokenErr)
+	}
+
+	return c.JSON(http.StatusOK, models.AuthInfo{
+		ID:    user.ID,
+		Email: user.Email,
+		Token: newToken,
+	})
 }
 
 func (a *authController) WhoAmI(c echo.Context) error {
-	user := c.Get("user").(*jwt.Token)
-	climes := user.Claims.(*models.Claims)
+	token := a.getTokenFromContext(c)
+	climes := a.decodeToken(token)
 	return c.JSON(http.StatusOK, models.AuthInfo{
 		ID:    climes.ID,
 		Email: climes.Email,
-		Token: user.Raw,
+		Token: token.Raw,
 	})
 }
 
@@ -72,6 +86,14 @@ func (a *authController) createToken(user *models.User) (string, error) {
 	claims["exp"] = exp
 	tokenString, err := token.SignedString([]byte("my_secret"))
 	return tokenString, err
+}
+
+func (a *authController) decodeToken(token *jwt.Token) *models.Claims {
+	return token.Claims.(*models.Claims)
+}
+
+func (a *authController) getTokenFromContext(c echo.Context) *jwt.Token {
+	return c.Get("user").(*jwt.Token)
 }
 
 func NewAuthController(db *gorm.DB) AuthController {

@@ -61,6 +61,7 @@ func main() {
 	authController := controllers.NewAuthController(db)
 
 	e.POST("/auth/login", authController.Login)
+	e.POST("/auth/refresh", authController.RefreshToken)
 	e.GET("/auth/whoAmi", authController.WhoAmI)
 
 	e.Logger.Fatal(e.Start(":1323"))

@@ -6,9 +6,10 @@ import (
 )
 
 type User struct {
+	ID       int    `json:"id" yaml:"id" gorm:"primary_key"`
 	Email    string `json:"email" yaml:"email" validate:"required,email"`
 	Password string `json:"password" yaml:"password" validate:"required"`
-	DbBase
+	DbExt
 }
 
 func (user *User) BeforeSave(scope *gorm.Scope) (err error) {
