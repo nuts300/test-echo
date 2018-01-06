@@ -15,4 +15,5 @@ var (
 	FAILED_UPDATE_USER   = ErrorCode{Code: 500, Message: "Failed update user."}
 	FAILED_DELETE_USER   = ErrorCode{Code: 500, Message: "Failed delete user."}
 	NOT_FOUND_USER       = ErrorCode{Code: 404, Message: "Not found user."}
+	UNAUTHORIZED_ERROR   = ErrorCode{Code: 500, Message: "UnAuthorized"}
 )

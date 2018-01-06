@@ -17,10 +17,10 @@ type (
 	}
 )
 
-var errorLogger = log.New(os.Stdout, "[error]", log.LstdFlags|log.Llongfile)
+var errorLogger = log.New(os.Stdout, "[error]", 0)
 var infoLogger = log.New(os.Stdout, "[info]", 0)
 var warnLogger = log.New(os.Stdout, "[warn]", 0)
-var debugLogger = log.New(os.Stdout, "[debug]", log.LstdFlags|log.Llongfile)
+var debugLogger = log.New(os.Stdout, "[debug]", 0)
 
 func (c *customeLogger) Error(args ...interface{}) {
 	errorLogger.Println(args...)

@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/echo"
 	"github.com/nuts300/test-echo/app_error"
 	"github.com/nuts300/test-echo/models"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type (
@@ -16,6 +17,7 @@ type (
 		CreateUser(models.User) (models.User, *echo.HTTPError)
 		UpdateUser(int, models.User) (models.User, *echo.HTTPError)
 		DeleteUser(int) (models.User, *echo.HTTPError)
+		FindUserByEmailAndPassword(email string, password string) (models.User, *echo.HTTPError)
 	}
 
 	userResource struct {
@@ -90,6 +92,27 @@ func (u *userResource) DeleteUser(userID int) (models.User, *echo.HTTPError) {
 	if result.RowsAffected < 1 {
 		httpError = appError.NewAppError(appError.NOT_FOUND_USER, errors.New("Not found user"))
 	}
+	return user, httpError
+}
+
+func (u *userResource) FindUserByEmailAndPassword(email string, password string) (models.User, *echo.HTTPError) {
+	user := models.NewUser()
+	err := u.db.Where("email = ?", email).First(&user).Error
+	var httpError *echo.HTTPError
+	if err != nil {
+		switch err {
+		case gorm.ErrRecordNotFound:
+			httpError = appError.NewAppError(appError.NOT_FOUND_USER, err)
+		default:
+			httpError = appError.NewAppError(appError.FAILED_READ_USER, err)
+		}
+		return user, httpError
+	}
+
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
+		httpError = appError.NewAppError(appError.UNAUTHORIZED_ERROR, err)
+	}
+
 	return user, httpError
 }
 

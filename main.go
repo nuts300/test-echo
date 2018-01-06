@@ -41,5 +41,9 @@ func main() {
 	e.PUT("/users/:id", userController.UpdateUser)
 	e.DELETE("/users/:id", userController.DeleteUser)
 
+	authController := controllers.NewAuthController(db)
+
+	e.POST("/auth/login", authController.Login)
+
 	e.Logger.Fatal(e.Start(":1323"))
 }
