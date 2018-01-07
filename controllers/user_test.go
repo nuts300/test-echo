@@ -73,11 +73,33 @@ func TestGetUser(t *testing.T) {
 	if assert.NoError(t, userController.GetUser(c)) {
 		resUser := models.NewUser()
 		if err := json.Unmarshal(rec.Body.Bytes(), resUser); err != nil {
-			assert.Fail(t, "Failed unmarshal post data.", err.Error())
+			assert.Fail(t, "Failed unmarshal response data.", err.Error())
 		} else {
 			assert.Equal(t, http.StatusOK, rec.Code)
 			assert.Equal(t, createdUser.Email, resUser.Email)
 			assert.Equal(t, createdUser.ID, resUser.ID)
+		}
+	}
+}
+
+func TestGetUsers(t *testing.T) {
+	c, rec := generateContextAndResponse(echo.GET, "/", nil)
+	c.SetPath("/users")
+	userController := generateUserController()
+
+	if assert.NoError(t, userController.GetUsers(c)) {
+		resUsers := &[]models.User{}
+		if err := json.Unmarshal(rec.Body.Bytes(), resUsers); err != nil {
+			assert.Fail(t, "Failed unmarshal response data.", err.Error())
+		} else {
+			assert.Equal(t, http.StatusOK, rec.Code)
+			for i := 0; i < len(*resUsers); i++ {
+				if (*resUsers)[i].ID == createdUser.ID {
+					assert.Equal(t, createdUser.Email, (*resUsers)[i].Email)
+				}
+				return
+			}
+			assert.Fail(t, "Not found created user.")
 		}
 	}
 }
