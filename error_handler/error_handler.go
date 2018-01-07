@@ -20,17 +20,18 @@ func AppErrorHandler(err error, c echo.Context) {
 	code := http.StatusInternalServerError
 	inner := errors.New("Internal error")
 	message := err.Error()
+	innerMessage := ""
 	if he, ok := err.(*echo.HTTPError); ok {
 		code = he.Code
 		inner = he.Inner
 		message = he.Message.(string)
-		if inner == nil {
-			inner = errors.New("Internal error")
-		}
+	}
+	if inner != nil {
+		innerMessage = inner.Error()
 	}
 	statusMessge := fmt.Sprint("[status]", code)
 	ridMessage := fmt.Sprint("[rid]", c.Response().Header().Get(echo.HeaderXRequestID))
-	logger.Error(ridMessage, statusMessge, err.Error(), inner.Error())
-	res := errorResponse{Message: message, Error: inner.Error()}
+	logger.Error(ridMessage, statusMessge, err.Error(), innerMessage)
+	res := errorResponse{Message: message, Error: innerMessage}
 	c.JSON(code, res)
 }

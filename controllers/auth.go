@@ -27,7 +27,7 @@ type (
 func (a *authController) Login(c echo.Context) error {
 	user := models.NewUser()
 	if err := c.Bind(&user); err != nil {
-		return appError.NewAppError(appError.INVALID_USER_PAYLOAD, err)
+		return appError.NewAppError(appError.ErrorInvalidUserPayload, err)
 	}
 
 	findedUser, err := a.resource.FindUserByEmailAndPassword(user.Email, user.Password)
@@ -36,7 +36,7 @@ func (a *authController) Login(c echo.Context) error {
 	}
 	token, tokenErr := a.createToken(&findedUser)
 	if tokenErr != nil || token == "" {
-		return appError.NewAppError(appError.UNAUTHORIZED_ERROR, tokenErr)
+		return appError.NewAppError(appError.ErrorUnauthorized, tokenErr)
 	}
 
 	return c.JSON(http.StatusOK, models.AuthInfo{
@@ -55,7 +55,7 @@ func (a *authController) RefreshToken(c echo.Context) error {
 	}
 	newToken, tokenErr := a.createToken(&user)
 	if tokenErr != nil || newToken == "" {
-		return appError.NewAppError(appError.UNAUTHORIZED_ERROR, tokenErr)
+		return appError.NewAppError(appError.ErrorUnauthorized, tokenErr)
 	}
 
 	return c.JSON(http.StatusOK, models.AuthInfo{
