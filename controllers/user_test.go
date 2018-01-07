@@ -137,5 +137,9 @@ func TestDeleteUser(t *testing.T) {
 
 	if assert.NoError(t, userController.DeleteUser(c)) {
 		assert.Equal(t, http.StatusNoContent, rec.Code)
+		ctxForGet, recForGet := generateContextAndResponse(echo.GET, "/", nil)
+		ctxForGet.SetPath("/users/:id")
+		ctxForGet.SetParamNames("id")
+		assert.Equal(t, http.StatusOK, recForGet.Code)
 	}
 }
