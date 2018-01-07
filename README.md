@@ -1,5 +1,9 @@
 # Test echo
 
+## env
+- mysql
+- go 1.9.2
+
 ## Install
 
 ### Install dep
@@ -19,7 +23,17 @@ dep ensure
 go get github.com/codegangsta/gin
 ```
 
+### Start db for dev
+```
+./start_db_dev.sh
+```
+
 ### Start app for dev
 ```
 ./start_app_dev.sh
+```
+
+## Testing
+```
+./test.sh
 ```
