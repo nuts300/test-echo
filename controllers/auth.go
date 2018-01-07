@@ -26,7 +26,7 @@ type (
 
 func (a *authController) Login(c echo.Context) error {
 	user := models.NewUser()
-	if err := c.Bind(&user); err != nil {
+	if err := c.Bind(user); err != nil {
 		return appError.NewAppError(appError.ErrorInvalidUserPayload, err)
 	}
 
@@ -49,11 +49,11 @@ func (a *authController) Login(c echo.Context) error {
 func (a *authController) RefreshToken(c echo.Context) error {
 	token := a.getTokenFromContext(c)
 	climes := a.decodeToken(token)
-	user := models.User{
+	user := &models.User{
 		ID:    climes.ID,
 		Email: climes.Email,
 	}
-	newToken, tokenErr := a.createToken(&user)
+	newToken, tokenErr := a.createToken(user)
 	if tokenErr != nil || newToken == "" {
 		return appError.NewAppError(appError.ErrorUnauthorized, tokenErr)
 	}

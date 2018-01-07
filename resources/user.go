@@ -38,17 +38,17 @@ func (u *userResource) ReadUserByID(userID int) (models.User, *echo.HTTPError) {
 			httpError = appError.NewAppError(appError.ErrorFailedReadUser, err)
 		}
 	}
-	return user, httpError
+	return *user, httpError
 }
 
 func (u *userResource) ReadUsers() ([]models.User, *echo.HTTPError) {
-	users := []models.User{}
-	errors := u.db.Find(&users).GetErrors()
+	users := &[]models.User{}
+	errors := u.db.Find(users).GetErrors()
 	var httpError *echo.HTTPError
 	if errors != nil {
 		httpError = appError.NewAppError(appError.ErrorFailedReadUsers, errors[0])
 	}
-	return users, httpError
+	return *users, httpError
 }
 
 func (u *userResource) CreateUser(user models.User) (models.User, *echo.HTTPError) {
@@ -77,7 +77,7 @@ func (u *userResource) UpdateUser(userID int, changeFields models.User) (models.
 			httpError = appError.NewAppError(appError.ErrorFailedReadUser, err)
 		}
 	}
-	return user, httpError
+	return *user, httpError
 }
 
 func (u *userResource) DeleteUser(userID int) (models.User, *echo.HTTPError) {
@@ -92,7 +92,7 @@ func (u *userResource) DeleteUser(userID int) (models.User, *echo.HTTPError) {
 	if result.RowsAffected < 1 {
 		httpError = appError.NewAppError(appError.ErrorNotFoundUser, errors.New("Not found user"))
 	}
-	return user, httpError
+	return *user, httpError
 }
 
 func (u *userResource) FindUserByEmailAndPassword(email string, password string) (models.User, *echo.HTTPError) {
@@ -106,14 +106,14 @@ func (u *userResource) FindUserByEmailAndPassword(email string, password string)
 		default:
 			httpError = appError.NewAppError(appError.ErrorFailedReadUser, err)
 		}
-		return user, httpError
+		return *user, httpError
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
 		httpError = appError.NewAppError(appError.ErrorUnauthorized, err)
 	}
 
-	return user, httpError
+	return *user, httpError
 }
 
 func NewUserResource(db *gorm.DB) UserResource {

@@ -53,13 +53,13 @@ func (u *userController) GetUsers(c echo.Context) error {
 
 func (u *userController) CreateUser(c echo.Context) error {
 	user := models.NewUser()
-	if err := c.Bind(&user); err != nil {
+	if err := c.Bind(user); err != nil {
 		return appError.NewAppError(appError.ErrorInvalidUserPayload, err)
 	}
 	if err := validate.Struct(user); err != nil {
 		return appError.NewAppError(appError.ErrorInvalidUserPayload, err)
 	}
-	createdUser, httpError := u.resource.CreateUser(user)
+	createdUser, httpError := u.resource.CreateUser(*user)
 	if httpError != nil {
 		return httpError
 	}
@@ -72,10 +72,10 @@ func (u *userController) UpdateUser(c echo.Context) error {
 		return appError.NewAppError(appError.ErrorInvalidUserPayload, err)
 	}
 	user := models.NewUser()
-	if err := c.Bind(&user); err != nil {
+	if err := c.Bind(user); err != nil {
 		return appError.NewAppError(appError.ErrorInvalidUserPayload, err)
 	}
-	updatedUser, httpError := u.resource.UpdateUser(id, user)
+	updatedUser, httpError := u.resource.UpdateUser(id, *user)
 	if httpError != nil {
 		return httpError
 	}

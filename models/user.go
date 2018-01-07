@@ -20,6 +20,6 @@ func (user *User) BeforeSave(scope *gorm.Scope) (err error) {
 	return nil
 }
 
-func NewUser() User {
-	return User{}
+func NewUser() *User {
+	return &User{}
 }
