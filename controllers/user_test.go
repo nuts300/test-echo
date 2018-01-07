@@ -19,6 +19,7 @@ import (
 var database = db.GetDB()
 
 var userJSON = `{"email":"user_test@test.com", "password": "1234"}`
+var userJOSNForUpate = `{"email":"user_test2@test.com", "password": "1234"}`
 
 var createdUser models.User
 
@@ -100,6 +101,29 @@ func TestGetUsers(t *testing.T) {
 				return
 			}
 			assert.Fail(t, "Not found created user.")
+		}
+	}
+}
+
+func TestUpdateUser(t *testing.T) {
+	c, rec := generateContextAndResponse(echo.PUT, "/", &userJOSNForUpate)
+	c.SetPath("/users/:id")
+	c.SetParamNames("id")
+	c.SetParamValues(strconv.Itoa(createdUser.ID))
+	userController := generateUserController()
+
+	putUser := models.NewUser()
+	if err := json.Unmarshal([]byte(userJOSNForUpate), putUser); err != nil {
+		assert.Fail(t, "Failed unmarshal put data.", err.Error())
+	}
+
+	if assert.NoError(t, userController.UpdateUser(c)) {
+		resUser := models.NewUser()
+		if err := json.Unmarshal(rec.Body.Bytes(), resUser); err != nil {
+			assert.Fail(t, "Failed unmarshal put data.", err.Error())
+		} else {
+			assert.Equal(t, http.StatusOK, rec.Code)
+			assert.Equal(t, putUser.Email, resUser.Email)
 		}
 	}
 }
