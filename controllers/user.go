@@ -33,7 +33,7 @@ type (
 func (u *userController) GetUser(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return appError.NewAppError(appError.ErrorInvalidUserPayload, err)
+		return appError.NewAppError(appError.ErrorInvalidUserID, err)
 	}
 	result, httpError := u.resource.ReadUserByID(id)
 	if httpError != nil {
