@@ -127,3 +127,15 @@ func TestUpdateUser(t *testing.T) {
 		}
 	}
 }
+
+func TestDeleteUser(t *testing.T) {
+	c, rec := generateContextAndResponse(echo.DELETE, "/", nil)
+	c.SetPath("/users/:id")
+	c.SetParamNames("id")
+	c.SetParamValues(strconv.Itoa(createdUser.ID))
+	userController := generateUserController()
+
+	if assert.NoError(t, userController.DeleteUser(c)) {
+		assert.Equal(t, http.StatusNoContent, rec.Code)
+	}
+}
