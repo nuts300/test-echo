@@ -35,17 +35,18 @@ func (u *userController) GetUser(c echo.Context) error {
 	if err != nil {
 		return appError.NewAppError(appError.ErrorInvalidUserPayload, err)
 	}
-	if result, err := u.resource.ReadUserByID(id); err != nil {
-		return err
-	} else {
-		return c.JSON(http.StatusOK, result)
+	result, httpError := u.resource.ReadUserByID(id)
+	if httpError != nil {
+		return httpError
 	}
+	return c.JSON(http.StatusOK, result)
+
 }
 
 func (u *userController) GetUsers(c echo.Context) error {
-	result, err := u.resource.ReadUsers()
-	if err != nil {
-		return err
+	result, httpError := u.resource.ReadUsers()
+	if httpError != nil {
+		return httpError
 	}
 	return c.JSON(http.StatusOK, result)
 }
@@ -58,11 +59,11 @@ func (u *userController) CreateUser(c echo.Context) error {
 	if err := validate.Struct(user); err != nil {
 		return appError.NewAppError(appError.ErrorInvalidUserPayload, err)
 	}
-	if result, err := u.resource.CreateUser(user); err != nil {
-		return err
-	} else {
-		return c.JSON(http.StatusOK, result)
+	createdUser, httpError := u.resource.CreateUser(user)
+	if httpError != nil {
+		return httpError
 	}
+	return c.JSON(http.StatusOK, createdUser)
 }
 
 func (u *userController) UpdateUser(c echo.Context) error {
@@ -74,11 +75,11 @@ func (u *userController) UpdateUser(c echo.Context) error {
 	if err := c.Bind(&user); err != nil {
 		return appError.NewAppError(appError.ErrorInvalidUserPayload, err)
 	}
-	if result, err := u.resource.UpdateUser(id, user); err != nil {
-		return err
-	} else {
-		return c.JSON(http.StatusOK, result)
+	updatedUser, httpError := u.resource.UpdateUser(id, user)
+	if httpError != nil {
+		return httpError
 	}
+	return c.JSON(http.StatusOK, updatedUser)
 }
 
 func (u *userController) DeleteUser(c echo.Context) error {
@@ -86,11 +87,11 @@ func (u *userController) DeleteUser(c echo.Context) error {
 	if err != nil {
 		return appError.NewAppError(appError.ErrorInvalidUserPayload, err)
 	}
-	if _, err := u.resource.DeleteUser(id); err != nil {
-		return err
-	} else {
-		return c.NoContent(http.StatusNoContent)
+	_, httpError := u.resource.DeleteUser(id)
+	if httpError != nil {
+		return httpError
 	}
+	return c.NoContent(http.StatusNoContent)
 }
 
 func NewUserController(resource resources.UserResource) UserController {

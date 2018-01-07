@@ -1,19 +1,23 @@
 package appError
 
+import (
+	"net/http"
+)
+
 type ErrorCode struct {
 	Code    int
 	Message string
 }
 
 var (
-	ErrorInternalServer     = ErrorCode{Code: 500, Message: "Unexpected error."}
-	ErrorInvalidUserID      = ErrorCode{Code: 400, Message: "Invalid user id."}
-	ErrorInvalidUserPayload = ErrorCode{Code: 400, Message: "Invalid user payload."}
-	ErrorFailedReadUser     = ErrorCode{Code: 500, Message: "Failed read user."}
-	ErrorFailedReadUsers    = ErrorCode{Code: 500, Message: "Failed read users."}
-	ErrorFailedCreateUser   = ErrorCode{Code: 500, Message: "Failed create user."}
-	ErrorFailedUpdateUser   = ErrorCode{Code: 500, Message: "Failed update user."}
-	ErrorFailedDeleteUser   = ErrorCode{Code: 500, Message: "Failed delete user."}
-	ErrorNotFoundUser       = ErrorCode{Code: 404, Message: "Not found user."}
-	ErrorUnauthorized       = ErrorCode{Code: 500, Message: "UnAuthorized"}
+	ErrorInternalServer     = ErrorCode{Code: http.StatusInternalServerError, Message: "Unexpected error."}
+	ErrorInvalidUserID      = ErrorCode{Code: http.StatusBadRequest, Message: "Invalid user id."}
+	ErrorInvalidUserPayload = ErrorCode{Code: http.StatusBadRequest, Message: "Invalid user payload."}
+	ErrorFailedReadUser     = ErrorCode{Code: http.StatusInternalServerError, Message: "Failed read user."}
+	ErrorFailedReadUsers    = ErrorCode{Code: http.StatusInternalServerError, Message: "Failed read users."}
+	ErrorFailedCreateUser   = ErrorCode{Code: http.StatusInternalServerError, Message: "Failed create user."}
+	ErrorFailedUpdateUser   = ErrorCode{Code: http.StatusInternalServerError, Message: "Failed update user."}
+	ErrorFailedDeleteUser   = ErrorCode{Code: http.StatusInternalServerError, Message: "Failed delete user."}
+	ErrorNotFoundUser       = ErrorCode{Code: http.StatusNotFound, Message: "Not found user."}
+	ErrorUnauthorized       = ErrorCode{Code: http.StatusInternalServerError, Message: "UnAuthorized"}
 )
