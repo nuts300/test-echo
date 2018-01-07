@@ -33,7 +33,7 @@ type (
 func (u *userController) GetUser(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return appError.NewAppError(appError.ErrorInvalidUserID, err)
+		return appError.NewHTTPError(appError.ErrorInvalidUserID, err)
 	}
 	result, httpError := u.resource.ReadUserByID(id)
 	if httpError != nil {
@@ -54,10 +54,10 @@ func (u *userController) GetUsers(c echo.Context) error {
 func (u *userController) CreateUser(c echo.Context) error {
 	user := models.NewUser()
 	if err := c.Bind(user); err != nil {
-		return appError.NewAppError(appError.ErrorInvalidUserPayload, err)
+		return appError.NewHTTPError(appError.ErrorInvalidUserPayload, err)
 	}
 	if err := validate.Struct(user); err != nil {
-		return appError.NewAppError(appError.ErrorInvalidUserPayload, err)
+		return appError.NewHTTPError(appError.ErrorInvalidUserPayload, err)
 	}
 	createdUser, httpError := u.resource.CreateUser(*user)
 	if httpError != nil {
@@ -69,11 +69,11 @@ func (u *userController) CreateUser(c echo.Context) error {
 func (u *userController) UpdateUser(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return appError.NewAppError(appError.ErrorInvalidUserPayload, err)
+		return appError.NewHTTPError(appError.ErrorInvalidUserPayload, err)
 	}
 	user := models.NewUser()
 	if err := c.Bind(user); err != nil {
-		return appError.NewAppError(appError.ErrorInvalidUserPayload, err)
+		return appError.NewHTTPError(appError.ErrorInvalidUserPayload, err)
 	}
 	updatedUser, httpError := u.resource.UpdateUser(id, *user)
 	if httpError != nil {
@@ -85,7 +85,7 @@ func (u *userController) UpdateUser(c echo.Context) error {
 func (u *userController) DeleteUser(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return appError.NewAppError(appError.ErrorInvalidUserPayload, err)
+		return appError.NewHTTPError(appError.ErrorInvalidUserPayload, err)
 	}
 	_, httpError := u.resource.DeleteUser(id)
 	if httpError != nil {
