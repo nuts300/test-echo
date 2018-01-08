@@ -3,11 +3,10 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
-	"net/http/httptest"
 	"strconv"
-	"strings"
 	"testing"
 
+	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo"
 	"github.com/stretchr/testify/assert"
 
@@ -16,36 +15,21 @@ import (
 	"github.com/nuts300/test-echo/resources"
 )
 
-var database = db.GetDB()
-
 var userJSON = `{"email":"user_test@test.com", "password": "1234"}`
 var userJOSNForUpate = `{"email":"user_test2@test.com", "password": "1234"}`
-
 var createdUser models.User
 
-func generateContextAndResponse(method string, path string, payLoad *string) (echo.Context, *httptest.ResponseRecorder) {
-	e := echo.New()
-	var req *http.Request
-	if payLoad != nil {
-		req = httptest.NewRequest(method, path, strings.NewReader(*payLoad))
-	} else {
-		req = httptest.NewRequest(method, path, nil)
-	}
-	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-	recorder := httptest.NewRecorder()
-	context := e.NewContext(req, recorder)
-	return context, recorder
-}
-
-func generateUserController() UserController {
+func generateUserController(database *gorm.DB) UserController {
 	userResource := resources.NewUserResource(database)
 	userController := NewUserController(userResource)
 	return userController
 }
 
 func TestCreateUser(t *testing.T) {
+	database := db.GetDB()
+	defer database.Close()
 	c, rec := generateContextAndResponse(echo.POST, "/users", &userJSON)
-	userController := generateUserController()
+	userController := generateUserController(database)
 
 	postUser := models.NewUser()
 	if err := json.Unmarshal([]byte(userJSON), postUser); err != nil {
@@ -65,11 +49,13 @@ func TestCreateUser(t *testing.T) {
 }
 
 func TestGetUser(t *testing.T) {
+	database := db.GetDB()
+	defer database.Close()
 	c, rec := generateContextAndResponse(echo.GET, "/", nil)
 	c.SetPath("/users/:id")
 	c.SetParamNames("id")
 	c.SetParamValues(strconv.Itoa(createdUser.ID))
-	userController := generateUserController()
+	userController := generateUserController(database)
 
 	if assert.NoError(t, userController.GetUser(c)) {
 		resUser := models.NewUser()
@@ -84,9 +70,11 @@ func TestGetUser(t *testing.T) {
 }
 
 func TestGetUsers(t *testing.T) {
+	database := db.GetDB()
+	defer database.Close()
 	c, rec := generateContextAndResponse(echo.GET, "/", nil)
 	c.SetPath("/users")
-	userController := generateUserController()
+	userController := generateUserController(database)
 
 	if assert.NoError(t, userController.GetUsers(c)) {
 		resUsers := &[]models.User{}
@@ -106,11 +94,13 @@ func TestGetUsers(t *testing.T) {
 }
 
 func TestUpdateUser(t *testing.T) {
+	database := db.GetDB()
+	defer database.Close()
 	c, rec := generateContextAndResponse(echo.PUT, "/", &userJOSNForUpate)
 	c.SetPath("/users/:id")
 	c.SetParamNames("id")
 	c.SetParamValues(strconv.Itoa(createdUser.ID))
-	userController := generateUserController()
+	userController := generateUserController(database)
 
 	putUser := models.NewUser()
 	if err := json.Unmarshal([]byte(userJOSNForUpate), putUser); err != nil {
@@ -129,11 +119,13 @@ func TestUpdateUser(t *testing.T) {
 }
 
 func TestDeleteUser(t *testing.T) {
+	database := db.GetDB()
+	defer database.Close()
 	c, rec := generateContextAndResponse(echo.DELETE, "/", nil)
 	c.SetPath("/users/:id")
 	c.SetParamNames("id")
 	c.SetParamValues(strconv.Itoa(createdUser.ID))
-	userController := generateUserController()
+	userController := generateUserController(database)
 
 	if assert.NoError(t, userController.DeleteUser(c)) {
 		assert.Equal(t, http.StatusNoContent, rec.Code)
