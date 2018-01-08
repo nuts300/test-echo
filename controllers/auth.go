@@ -10,11 +10,13 @@ import (
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/nuts300/test-echo/app_error"
+	"github.com/nuts300/test-echo/app_logger"
 )
 
 type (
 	authController struct {
 		resource resources.UserResource
+		logger   appLogger.CustomLogger
 	}
 
 	AuthController interface {
@@ -95,5 +97,8 @@ func (a *authController) getTokenFromContext(c echo.Context) *jwt.Token {
 }
 
 func NewAuthController(resource resources.UserResource) AuthController {
-	return &authController{resource: resource}
+	return &authController{
+		resource: resource,
+		logger:   appLogger.GetLogger(),
+	}
 }

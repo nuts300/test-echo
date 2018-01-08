@@ -13,12 +13,11 @@ import (
 	"github.com/nuts300/test-echo/resources"
 )
 
-var logger = appLogger.GetLogger()
-var validate = validator.New()
-
 type (
 	userController struct {
 		resource resources.UserResource
+		logger   appLogger.CustomLogger
+		validate *validator.Validate
 	}
 
 	UserController interface {
@@ -56,7 +55,7 @@ func (u *userController) CreateUser(c echo.Context) error {
 	if err := c.Bind(user); err != nil {
 		return appError.NewHTTPError(appError.ErrorInvalidUserPayload, err)
 	}
-	if err := validate.Struct(user); err != nil {
+	if err := u.validate.Struct(user); err != nil {
 		return appError.NewHTTPError(appError.ErrorInvalidUserPayload, err)
 	}
 	createdUser, httpError := u.resource.CreateUser(*user)
@@ -95,5 +94,9 @@ func (u *userController) DeleteUser(c echo.Context) error {
 }
 
 func NewUserController(resource resources.UserResource) UserController {
-	return &userController{resource: resource}
+	return &userController{
+		resource: resource,
+		logger:   appLogger.GetLogger(),
+		validate: validator.New(),
+	}
 }

@@ -1,8 +1,9 @@
 package appLogger
 
 import (
-	"log"
 	"os"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type (
@@ -11,35 +12,44 @@ type (
 		Info(...interface{})
 		Warn(...interface{})
 		Debug(...interface{})
+		Fatal(...interface{})
 	}
 
 	customeLogger struct {
+		logger *log.Logger
 	}
 )
 
-var errorLogger = log.New(os.Stdout, "[error]", 0)
-var infoLogger = log.New(os.Stdout, "[info]", 0)
-var warnLogger = log.New(os.Stdout, "[warn]", 0)
-var debugLogger = log.New(os.Stdout, "[debug]", 0)
-
-func (c *customeLogger) Error(args ...interface{}) {
-	errorLogger.Println(args...)
+func loggerNew() CustomLogger {
+	log.SetOutput(os.Stdout)
+	log.SetLevel(log.DebugLevel)
+	return &customeLogger{
+		logger: log.New(),
+	}
 }
 
-func (c *customeLogger) Info(args ...interface{}) {
-	infoLogger.Println(args...)
+var logger = loggerNew()
+
+func (l *customeLogger) Error(args ...interface{}) {
+	l.logger.Error(args...)
 }
 
-func (c *customeLogger) Warn(args ...interface{}) {
-	warnLogger.Println(args...)
+func (l *customeLogger) Info(args ...interface{}) {
+	l.logger.Info(args...)
 }
 
-func (c *customeLogger) Debug(args ...interface{}) {
-	debugLogger.Println(args...)
+func (l *customeLogger) Warn(args ...interface{}) {
+	l.logger.Warn(args...)
 }
 
-var logger = customeLogger{}
+func (l *customeLogger) Debug(args ...interface{}) {
+	l.logger.Debug(args...)
+}
+
+func (l *customeLogger) Fatal(args ...interface{}) {
+	l.logger.Fatal(args...)
+}
 
 func GetLogger() CustomLogger {
-	return &logger
+	return logger
 }
